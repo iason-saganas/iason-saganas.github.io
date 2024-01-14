@@ -34,14 +34,10 @@ theme: minima
 #remote_theme: minima
 plugins:
   - jekyll-feed
-  - jekyll-katex
 
-katex:
-  #js_path: "./_site/assets/js"  # Path used to search for katex.min.js
-  rendering_options:
-    # Default KaTeX rendering options. See https://github.com/Khan/KaTeX#rendering-options
-    throw_error: true                       # throwOnError - set to false if you want rendering to output error as text rather than a build error
-    error_color: "#cc0000"                  # errorColor
+markdown: kramdown
+kramdown:
+  math_engine: katex
 
 # Exclude from processing.
 # The following items will not be processed, by default.

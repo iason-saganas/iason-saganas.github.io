@@ -6,9 +6,7 @@ categories: [science-stuff]
 ---
 {% include katexLink.html%}
 
-{% katex display %}
-c = \pm\sqrt{a^2 + b^2}
-{% endkatex %}
+$$ c = \pm\sqrt{a^2 + b^2} $$
 
 
 Great question.
