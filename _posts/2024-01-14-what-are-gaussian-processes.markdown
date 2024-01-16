@@ -66,7 +66,8 @@ covariance operator.
 Assume it is valuable, even a valid description of our knowledge, to model some process of nature, such that the evolution 
 of the joint probability density of observables of interest is a multivariate Gaussian that dynamically evolves in time.
 
-pretty pretty pictures
+![Example of Gaussian Process time evolution: Translation of a gaussian wave-packlet](../../../../media/images/Gaussien-process.gif)
+
 
 How would we build such a process in the context of Information Field Theory, where observables in a more concrete sense 
 refer to Blabla Data and stuff => Gaussian Priors => Basics => Product Rule for stochastically independent prob. density functions
