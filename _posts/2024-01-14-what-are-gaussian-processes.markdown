@@ -2,7 +2,7 @@
 layout: post
 title:  "What are Gaussian Processes?"
 date:   2024-01-14 15:39:58 +0100
-categories: [science-stuff]
+categories: [science-stuff-nifty]
 ---
 {% include katexLink.html%}
 
@@ -66,12 +66,14 @@ covariance operator.
 Assume it is valuable, even a valid description of our knowledge, to model some process of nature, such that the evolution 
 of the joint probability density of observables of interest is a multivariate Gaussian that dynamically evolves in time.
 
-![Example of Gaussian Process time evolution: Translation of a gaussian wave-packlet](../../../../media/images/Gaussien-process.gif)
+To do: Remove jumping frames in gif.
 
+![Example of Gaussian Process time evolution: Translation of a gaussian wave-packlet](../../../../media/nifty-posts/Gaussian-process.gif)
 
-How would we build such a process in the context of Information Field Theory, where observables in a more concrete sense 
-refer to Blabla Data and stuff => Gaussian Priors => Basics => Product Rule for stochastically independent prob. density functions
-=> Draw every random variable from a Gaussian thingy 
+In Bayesian Inference, the Gaussian Process can be used to model the prior probability over functions. Gaussian Process Regression used to interpolate
+the posterior probability distributions _between_ datapoints is also called "kriging". 
+
+How would we build such a process in the context of Information Field Theory? 
 
 Check out my other blog post on <u>the markov process as another example of a stochastic process.</u>
 
