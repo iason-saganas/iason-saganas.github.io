@@ -1,0 +1,34 @@
+
+<style>
+  #table-of-contents {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+  }
+
+</style>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Include a scrollspy library (e.g., Bootstrap's ScrollSpy) -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+
+<!-- Placeholder for the dynamic table of contents -->
+<nav id="table-of-contents"></nav>
+
+<script>
+  $(document).ready(function() {
+    // Generate table of contents
+    var toc = $("#table-of-contents");
+    $("h2, h3, h4, h5, h6").each(function() {
+      var title = $(this).text();
+      var id = $(this).attr("id");
+      toc.append("<a href='#" + id + "'>" + title + "</a><br>");
+    });
+
+    // Activate scrollspy
+    $('body').scrollspy({ target: '#table-of-contents' });
+  });
+</script>
+

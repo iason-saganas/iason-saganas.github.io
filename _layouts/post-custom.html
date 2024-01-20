@@ -1,27 +1,111 @@
 ---
 layout: default
 ---
-<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
-  <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
-    <p class="post-meta">
-      <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        {{ page.date | date: date_format }}
-      </time>
-      {%- if page.author -%}
-        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
-      {%- endif -%}</p>
-  </header>
+<style>
 
-  <div class="post-content e-content" itemprop="articleBody">
-    {{ content }}
+  .wrapper {
+    max-width: 1000px;
+  }
+
+  .flex-container {
+    display: flex;
+  }
+
+  .column1 {
+    flex: 1.5;
+    position: relative;
+  }
+
+  .column1 img {
+    width: 130px;
+    height: auto;
+  }
+
+  .column2 {
+    flex: 8;
+  }
+
+  .column3 {
+    flex: .5;
+  }
+
+  @media (max-width: 768px) {
+    .flex-container {
+      flex-direction: column;
+    }
+    .column1 {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+  }
+
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let column1 = document.querySelector(".column1");
+    let image = document.getElementById('donate-image')
+    let flexContainer = document.querySelector(".flex-container")
+    let flexStyle = window.getComputedStyle(flexContainer)
+
+    const isColumnDirection = flexStyle.getPropertyValue('flex-direction') === 'column';
+
+    if (!isColumnDirection){
+
+      // not a small device => activate scroll
+    window.addEventListener("scroll", function () {
+      let rect = column1.getBoundingClientRect();
+
+      if (rect.top <= 0) {
+        image.style.position = "fixed";
+        image.style.top = "0";
+        image.style.left = rect.left;
+      } else {
+        image.style.position = "relative";
+        image.style.top = "auto";
+        image.style.left = "auto";
+      }
+    });
+
+    }
+
+  });
+</script>
+
+<div class="flex-container">
+
+  <div class="column1">
+      <form action="https://www.paypal.com/donate" method="post" target="_blank">
+        <input type="hidden" name="hosted_button_id" value="LW4J4BDXT6ZY6" />
+        <input type="image"  id="donate-image" style="width: 130px" src="https://pics.paypal.com/00/s/NjVlMmQwOGItYzJkOC00MDNmLThmMzctNzgxNzYxODZkZTk3/file.PNG" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+      </form>
   </div>
 
-  {%- if site.disqus.shortname -%}
-    {%- include disqus_comments.html -%}
-  {%- endif -%}
+  <div class="column2">
+    <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+      <header class="post-header">
+        <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
+        <p class="post-meta">
+          <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            {{ page.date | date: date_format }}
+          </time>
+          {%- if page.author -%}
+          • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
+          {%- endif -%}
+        </p>
+      </header>
+      <div class="post-content e-content" itemprop="articleBody">
+        {{ content }}
+      </div>
+      {%- if site.disqus.shortname -%}
+      {%- include disqus_comments.html -%}
+      {%- endif -%}
+      <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+    </article>
+  </div>
 
-  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
-</article>
+  <div class="column3"></div>
+
+</div>

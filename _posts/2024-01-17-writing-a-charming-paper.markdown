@@ -1,11 +1,14 @@
 ---
-layout: post
+layout: post-custom
 title:  "Writing a CHARMing Paper"
 date:   2024-01-17 10:10:58 +0100
-categories: [charming-paper]
+categories: [the-process-of-writing-papers]
 ---
 
 {% include katexLink.html%}
+{% comment %}
+    {% include table-of-contents-on-side-margin-for-post.html%} 
+{% endcomment %}
 
 In this document, I will outline important results and the process of writing the update paper to 
 
@@ -14,7 +17,7 @@ In this document, I will outline important results and the process of writing th
 > CHARM: **C**osmic **H**istory **A**gnostic **R**econstruction **M**ethod. Inferring the past energy density
 > evolution parameterized by redshift \\( \rho(z)\\) using Supernovae Ia data.
 
-## Starting Situation
+## 17.01: Starting Situation
 
 In my Bachelor's Thesis, we extended Natalia's analysis to the recent [Pantheon+ Supernova Compilation](https://pantheonplussh0es.github.io){:target="_blank"} 
 We also looked at the [Union2.1 dataset](https://supernova.lbl.gov/Union/){:target="_blank"} which was the dataset originally used in Natalia's paper. (Both of those catalogues stitch many different SN samples together).
@@ -40,7 +43,7 @@ In my Bachelor's thesis we laid the code groundwork:
 - Merge datasets (see section down below)
 - Find or constrain fundamental cosmological parameters  (Hubble constant \\(H_0\\)) 
 
-## Merging Datasets Together And New Data
+## 18.01: Merging Datasets Together And New Data
 
 So long the Union2.1 and Pantheon+ compilations are independent, it could be possible to merge those datasets
 into a super-catalogue and construct the corresponding uncertainty matrix \\(\mathbf{\mathcal{N}}\\) on our own.
@@ -69,3 +72,23 @@ the signal inferred.
 - Analytic, auto-differentiable ΛCDM cosmography: _Karchev_
 - Principal Component Analysis: _Sharma_
 - Neural Network Reconstruction: _Mukherjee_
+
+
+## 19.01: Speeding Up The Code
+
+As already mentioned, my code may take up to \\(15 \mathrm{hrs}\\) for one inference run (Pantheon+ data, 
+\\(\approx 1700\\). datapoints). This is extremely problematic if the 
+goals of the analysis is to find the best-fit parameters of the Correlated Field Model and the run of one set of 
+parameters takes that long. 
+
+I am running the code on my local CPU (1,4 GHz Quad-Core Intel Core i5 on MacOS).
+
+The main culprit I believe is the diagonalization of the involved \\( 1700 \times 1700 \\) noise covariance matrix \\(N\\)
+of the Pantheon+ catalogue. Per my current understanding, the matrix is not diagonalized once, but hundreds if not 
+thousands of times in each update step of the Bayesian Inference. The matrix itself is also non-trivially changed 
+per each update step, so it is not as if the same transformation is redundantly repeated. 
+
+Of course, we could switch to running the code on a TPU, but it is important to re-check the code for any 
+redundant numerical transformations for efficiency's sake.
+
+In [this post]({% post_url 2024-01-19-optimize-kl-function %}) I explain my understanding of the 'optimize_kl()' function.

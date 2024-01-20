@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: post-custom
 title:  "IFT: How To Find The Instrument Response"
 date:   2024-01-16 21:10:58 +0100
 categories: [science-stuff-ift]
