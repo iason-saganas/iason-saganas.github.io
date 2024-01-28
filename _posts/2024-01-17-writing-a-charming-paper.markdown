@@ -91,4 +91,30 @@ per each update step, so it is not as if the same transformation is redundantly 
 Of course, we could switch to running the code on a TPU, but it is important to re-check the code for any 
 redundant numerical transformations for efficiency's sake.
 
-In [this post]({% post_url 2024-01-19-optimize-kl-function %}) I explain my understanding of the 'optimize_kl()' function.
+In [this post]({% post_url 2024-01-19-optimize-kl-function %}){:target="_blank"} I explain my understanding of the 'optimize_kl()' function.
+
+- Note 26.01: I think setting a GP might lead to several possibly unnecessary standardization transforms => Maybe try setting the power spectrum MORE explicitly than just loglogavgslope = (-4, something very small). ,
+- Time what time is needed for the code to run before the `optimize_kl()` call, what time during it, what time during the `sampledKL_energy()` call and what time is spent diagonalizing matrices
+- To run geoVi, you need to get the coordinate transform of the parameter space in which the likelihood distribution metric is the Euclidean one. In case of Gaussian Likelihoods, like we have here, the transform is the square root of the inverse Noise Covariance Matrix. I went about this problem by doing an eigendecomposition and returning the eigendecomposition with a squared eigenvalues diagonal matrix. There may be a more efficient process to do this. See [this stackoverflow thread ("Find the square root of a matrix")](https://math.stackexchange.com/questions/59384/find-the-square-root-of-a-matrix){:target="_blank"} for inspiration. 
+
+#### Note 28.01 
+
+We can visualize which part of our code takes up how much time and benchmark that against the demos NIFTy comes shipped,
+which we assume to be efficient. 
+We compare against 'getting_started_3.py', since a 'LOSResponse' Operator is employed.
+In the CHARM2.0 code, our response operator is an operator chain at whose heart also lies the 'LOSResponse' Operator.
+
+We use the radial line of sights mode and infer a signal field of \\(90 \times 90\\) pixels, 8100 pixels in total,
+from a synthetic dataset of 580 points. 
+We compare the computation time to that of Charm2.0 in case the Union2.1 dataset is used.
+There, a signal field of resolution \\(8000 \times 1\\) is inferred, also from 580 datapoints.
+
+Red \\( + \\) Yellow Bar \\( \approx \\) Blue Bar, 
+
+Green \\( + \\) Tourquoise Bar \\( \approx \\) Red Bar.
+
+{% include Computational-Benchmark-ChartJS.html %}
+
+It will probably be more informative to check the relative time taken:
+
+
