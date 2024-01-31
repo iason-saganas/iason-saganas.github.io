@@ -27,7 +27,7 @@
 <!-- I N I T I A L I Z E    H T M L    C A N V A S    A N D    W R A P P E R
 -->
 <div class='Canvas-Wrapper' style="height:500px">
-    <canvas id="myChart2"></canvas>
+    <canvas id="myChart3"></canvas>
 </div>
 
 
@@ -67,7 +67,7 @@
 
     function download_png(isChromium){
 
-        const base64 = myChart2.toBase64Image()
+        const base64 = myChart3.toBase64Image()
 
         if (isChromium===false){
             let a = document.createElement('a');
@@ -113,7 +113,7 @@
      *
      */
     function post_base64_data_to_velo(){
-        window.parent.postMessage(myChart2.toBase64Image(),"https://www.solarbildung.org/live-solar-data")
+        window.parent.postMessage(myChart3.toBase64Image(),"https://www.solarbildung.org/live-solar-data")
     }
 
 
@@ -122,11 +122,11 @@
 
     Chart.defaults.global.defaultFontFamily = "Roboto Mono";
 
-    let my_labels2 = ["Getting Started 3", "Charm2.0: Cosmological Tomography"]
-    const ctx2 = document.getElementById('myChart2');
+    let my_labels3 = ["Getting Started 3", "Charm2.0: Cosmological Tomography"]
+    const ctx3 = document.getElementById('myChart3');
 
 
-    var myChart2 = new Chart(ctx2, {
+    var myChart3 = new Chart(ctx3, {
 
         type: 'bar',
         data: {
@@ -142,7 +142,7 @@
                     borderWidth: 2,
                     borderSkipped: false,
                     // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
-                    data: [7.27]
+                    data: [7.27, 29.05]
                 },
                 {
                     // Generationspunkte datasets[0]
@@ -155,7 +155,7 @@
                     borderWidth: 2,
                     borderSkipped: false,
                     // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
-                    data: [2.03]
+                    data: [2.03, 0.52]
                 },
                 {
                     // Generationspunkte datasets[0]
@@ -168,7 +168,7 @@
                     borderWidth: 2,
                     borderSkipped: false,
                     // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
-                    data: [5.08 ]
+                    data: [5.08, 27.11 ]
                 },
                 {
                     // Generationspunkte datasets[0]
@@ -181,7 +181,7 @@
                     borderWidth: 2,
                     borderSkipped: false,
                     // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
-                    data: [0.01]
+                    data: [0.01, 0.07 ]
                 },
                 {
                     // Generationspunkte datasets[0]
@@ -194,11 +194,11 @@
                     borderWidth: 2,
                     borderSkipped: false,
                     // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
-                    data: [1.95]
+                    data: [1.95,  0.41]
                 },
             ],
 
-            labels: my_labels2,
+            labels: my_labels3,
         },
         options: {
             responsive: true,
@@ -211,7 +211,7 @@
             },
             title: {
                 display: true,
-                text: 'Absolute Computational Time Benchmark: CHARM2.0 vs getting_started_3.',
+                text: 'Relative Computational Time Benchmark: CHARM2.0 vs getting_started_3.',
                 position: 'top',
                 fontColor: 'black',
                 fontStyle: "",
@@ -231,13 +231,13 @@
                     title: function (tooltipItem){
                         tooltipItem = tooltipItem[0]
                         const currentIndex = tooltipItem.index
-                        const currentLabel = my_labels2[currentIndex].toString()
+                        const currentLabel = my_labels3[currentIndex].toString()
                         return currentLabel
                     },
                     label: function (tooltipItem) {
                         const datasetIndex = tooltipItem.datasetIndex
-                        const datasetName = myChart2.data.datasets[datasetIndex].label
-                        return tooltipItem.yLabel.toString() + ' minutes taken for: ' + datasetName
+                        const datasetName = myChart3.data.datasets[datasetIndex].label
+                        return tooltipItem.yLabel.toFixed(0).toString() + '% of time taken for: ' + datasetName
                     },
                 },
                 mode: 'index',
@@ -264,7 +264,7 @@
                     },
                     scaleLabel:{
                         display:true,
-                        labelString:"Number of Minutes Taken",
+                        labelString:"% of Time Taken",
                         fontColor: 'black',
                     }
                 }],
@@ -300,8 +300,15 @@
     });
 
 
+    const normalization1 = 7.27
+    const normalization2 = 29.05
 
-    /* W I X    V E L O    H T M L    C O M M U N I C A T I O N */
+    for (const dataset of myChart3.data.datasets){
+        dataset.data[0]  = dataset.data[0] / normalization1 * 100
+        dataset.data[1]  = dataset.data[1] / normalization2 * 100
+        myChart3.update()
+    }
+
 
 
 
@@ -337,20 +344,20 @@
             const labelTip = keywordToLabelDict[context[2]]
             const xUnit = keywordToUnitsDict[context[2]]
 
-            myChart2.data.labels = xValues
-            myChart2.data.datasets[0].data = yValues
-            myChart2.options.scales.xAxes[0].scaleLabel.labelString = labelTip
-            myChart2.options.tooltips.callbacks.afterLabel = function(tooltipItem) {
+            myChart3.data.labels = xValues
+            myChart3.data.datasets[0].data = yValues
+            myChart3.options.scales.xAxes[0].scaleLabel.labelString = labelTip
+            myChart3.options.tooltips.callbacks.afterLabel = function(tooltipItem) {
                 return tooltipItem.xLabel + xUnit
             }
-            myChart2.update()
+            myChart3.update()
         }
         else if (command === "Clear all."){
             try {
                 // Clear all data if exists
-                for (let dataset in myChart2.data.datasets){
+                for (let dataset in myChart3.data.datasets){
                     dataset.data = []
-                    myChart2.update()
+                    myChart3.update()
                 }
             }
             catch (error){

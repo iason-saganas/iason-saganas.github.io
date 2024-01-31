@@ -114,6 +114,9 @@ It then easily works out the most probable picture that actually is before its e
 
 ## Throwing The Whole Weight Of NIFTy8 And geoVI Onto The Problem
 
+![Optimize KL function Workflow Graph Tree](../../../../media/nifty-posts/optimize-kl-graph-tree.png)
+
+
 We found a dead alien in a corn field. 
 Upon transferring it into a forensic clinic and dissecting its brain, we stimulate its eyes with a fuzzy image
 and observe the current flux in its brain using an encephalogram to study the signal processing happening 

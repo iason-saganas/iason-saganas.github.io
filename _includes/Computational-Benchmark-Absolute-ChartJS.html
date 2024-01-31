@@ -1,0 +1,367 @@
+
+<!-- S T Y L E    C H O I C E S
+    -   Import Roboto Mono font from Google as a replacement of Helvetica
+ -->
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+    body{
+        margin:0;
+    }
+    .Canvas-Wrapper{
+        overflow: hidden;
+        width: 80%;
+        height: 100%;
+    //border-radius:30px;
+        background-color: rgba(0,0,0,0);
+        padding: 20px 35px 20px 20px;
+    }
+</style>
+
+<!-- I M P O R T S
+    -   Import Chart.js
+    -   Import PolyLib.js which is necessary for displaying the polynomial functions in the chart
+-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+<!-- I N I T I A L I Z E    H T M L    C A N V A S    A N D    W R A P P E R
+-->
+<div class='Canvas-Wrapper' style="height:500px">
+    <canvas id="myChart2"></canvas>
+</div>
+
+
+<!-- C H A R T . J S    C O D E
+-->
+<script>
+    /*
+      D E C L A R A T I O N    O F    G L O B A L    V A R I A B L E S
+    */
+    var universalXarray = []
+
+
+    /*
+      I M P O R T A N T    H E L P E R    F U N C T I O N S
+    */
+
+
+
+
+    /* Creates a step-evenly-spaced object of rounded floats (2 decimal places) going from 'start' to 'stop'. */
+    function roundedFloatArray(start,stop,step){
+        return Array.from({length:(stop-start)/step+1},(value,index)=> Math.round((start+index*step + Number.EPSILON) * 100) / 100)
+    }
+
+
+    /**
+     * This function takes two arguments, 'base64' which is the base-64 encoded image of the displayed chart and 'browser', a string indicating whether
+     * the browser is chromium or non-chromium based. The base64 data is constructed via the 'post_base64_data_to_velo()' function in this html code,
+     * which sends the information back to WIX Velo, which in return sends the base64 information as well as browser client information back to this html
+     * code, executing the function below (redundant workflow!).
+     * The image data is then downloaded by creating an anchor element and bestowing the 'href' attribute with the base64 string and simulating a click on
+     * the anchor element. In case the browser is chrome, the base64 data is converted to binary data, which is transformed into an array of byte array via
+     * iterating over the data in chunks of 1024 characters. A blob is constructed from the array of byte arrays and a blob URL is created and opened in a new
+     * window via 'window.open'.
+     * @param {boolean} isChromium - Whether the type of browser is chromium-based or not.
+     */
+
+    function download_png(isChromium){
+
+        const base64 = myChart2.toBase64Image()
+
+        if (isChromium===false){
+            let a = document.createElement('a');
+            a.target="_blank";
+            a.href = base64;
+            a.download = 'pv_power.jpg';
+            a.click();
+        }
+
+        else{
+
+
+            const base64ImageData = base64
+            const contentType = 'image/png';
+
+            const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
+            const byteArrays = [];
+
+            for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+                const slice = byteCharacters.slice(offset, offset + 1024);
+
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);}
+
+
+                const byteArray = new Uint8Array(byteNumbers);
+
+                byteArrays.push(byteArray);
+            }
+
+            const blob = new Blob(byteArrays, {type: contentType});
+            const blobUrl = URL.createObjectURL(blob);
+            window.open(blobUrl, '_blank');
+        }}
+
+    /**
+     * Creates the base64 data of the chart image via calling the 'toBase64Image()' method on the chart.JS instance.
+     * The base64 data is needed to download the current chart image via the 'download_png()' function. The base64 data
+     * is sent to WIX velo which gathers some browser information and reports back to this html code (redundant workflow.)
+     *
+     * SECURITY NOTE: the second argument of 'postMessage' has to be the deployed webpage URL.
+     *
+     */
+    function post_base64_data_to_velo(){
+        window.parent.postMessage(myChart2.toBase64Image(),"https://www.solarbildung.org/live-solar-data")
+    }
+
+
+    /* C H A R T    A N D    S T Y L E    C O N F I G U R A T I O N */
+
+
+    Chart.defaults.global.defaultFontFamily = "Roboto Mono";
+
+    let my_labels2 = ["Getting Started 3", "Charm2.0: Cosmological Tomography"]
+    const ctx2 = document.getElementById('myChart2');
+
+
+    var myChart2 = new Chart(ctx2, {
+
+        type: 'bar',
+        data: {
+            datasets: [
+                {
+                    // Generationspunkte datasets[0]
+                    type: 'bar',
+                    fill: false, //if style = line, set these attributes extra
+                    showLine: true,
+                    label: "optimize_kl()",
+                    borderColor : blue,
+                    backgroundColor: blue,
+                    borderWidth: 2,
+                    borderSkipped: false,
+                    // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
+                    data: [7.27, 29.05]
+                },
+                {
+                    // Generationspunkte datasets[0]
+                    type: 'bar',
+                    fill: false, //if style = line, set these attributes extra
+                    showLine: true,
+                    label: "SampledKLEnergy()",
+                    borderColor : red,
+                    backgroundColor: red,
+                    borderWidth: 2,
+                    borderSkipped: false,
+                    // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
+                    data: [2.03, 0.52]
+                },
+                {
+                    // Generationspunkte datasets[0]
+                    type: 'bar',
+                    fill: false, //if style = line, set these attributes extra
+                    showLine: true,
+                    label: "Finding the Descent Direction",
+                    borderColor : yellow,
+                    backgroundColor: yellow,
+                    borderWidth: 2,
+                    borderSkipped: false,
+                    // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
+                    data: [5.08, 27.11 ]
+                },
+                {
+                    // Generationspunkte datasets[0]
+                    type: 'bar',
+                    fill: false, //if style = line, set these attributes extra
+                    showLine: true,
+                    label: "Transforms and Metric",
+                    borderColor : green,
+                    backgroundColor: green,
+                    borderWidth: 2,
+                    borderSkipped: false,
+                    // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
+                    data: [0.01, 0.07 ]
+                },
+                {
+                    // Generationspunkte datasets[0]
+                    type: 'bar',
+                    fill: false, //if style = line, set these attributes extra
+                    showLine: true,
+                    label: "Actually Sampling KL Divergence",
+                    borderColor : tourquoise,
+                    backgroundColor: tourquoise,
+                    borderWidth: 2,
+                    borderSkipped: false,
+                    // stack: 'Stack 1',  // Set the stack property to the same value for all datasets
+                    data: [1.95,  0.41]
+                },
+            ],
+
+            labels: my_labels2,
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: 0
+            },
+            chartArea: {
+                backgroundColor: 'rgba(255, 255, 255, 0)'
+            },
+            title: {
+                display: true,
+                text: 'Absolute Computational Time Benchmark: CHARM2.0 vs getting_started_3.',
+                position: 'top',
+                fontColor: 'black',
+                fontStyle: "",
+                fontSize: 15,
+            },
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    fontColor: 'black',
+                    fontStyle: "",
+                    fontSize: 10,
+                }
+            },
+            tooltips: {
+                callbacks: {
+                    title: function (tooltipItem){
+                        tooltipItem = tooltipItem[0]
+                        const currentIndex = tooltipItem.index
+                        const currentLabel = my_labels2[currentIndex].toString()
+                        return currentLabel
+                    },
+                    label: function (tooltipItem) {
+                        const datasetIndex = tooltipItem.datasetIndex
+                        const datasetName = myChart2.data.datasets[datasetIndex].label
+                        return tooltipItem.yLabel.toString() + ' minutes taken for: ' + datasetName
+                    },
+                },
+                mode: 'index',
+                intersect: false
+
+            },
+            hover: {
+                mode: 'index',
+                intersect: false
+            },
+            scales:{
+                yAxes: [{
+                    stacked: true,
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 10,
+                        fontColor:  'black',
+                        fontStyle: "",
+                        padding:15,
+                    },
+                    gridLines: {
+                        drawTicks: false,
+                        color: 'rgba(0,0,0,.1)',
+                    },
+                    scaleLabel:{
+                        display:true,
+                        labelString:"Number of Minutes Taken",
+                        fontColor: 'black',
+                    }
+                }],
+                xAxes: [{
+                    stacked: true,
+                    barThickness:50,
+                    maxBarThickness: 50,
+                    position: 'bottom',
+                    ticks: {
+                        beginAtZero: true,
+                        autoSkip : true,
+                        maxTicksLimit: 15,
+                        fontSize: 10,
+                        fontColor: 'black',
+                        fontStyle: "",
+                        padding:15,
+                        /*callback: function(value,index,ticks){
+                            return +value.toFixed(2)
+                        }*/
+                    },
+                    gridLines: {
+                        drawTicks: false,
+                        color: 'rgba(0,0,0,0)',
+                    },
+                    scaleLabel:{
+                        display:true,
+                        labelString: "Programme run",
+                        fontColor: 'black',
+                    }
+                }],
+            },
+        }
+    });
+
+
+
+
+
+    window.onmessage = function(event){
+
+        // All messages arriving should be in this format: $w("#ChartJsDaily").postMessage( [ 'Download Png.', [ true ] ] )
+
+        const keywordToLabelDict = {
+            Distance: 'Gelaufene Distanz [km]',
+            AverageWeight: 'Durchschnittliches Gewicht [kg]',
+            NumOfParticipants: 'Anzahl der Teilnehmer',
+            AverageTimeNeeded: 'Benötigte Zeit [h]'
+        }
+
+        const keywordToUnitsDict = {
+            Distance: ' km',
+            AverageWeight: ' kg',
+            NumOfParticipants: ' ',
+            AverageTimeNeeded: ' h'
+        }
+
+        let command = event.data[0]
+        let context = event.data[1]
+
+
+        if (command === 'Download Png.'){
+            const isChromium = context[0]
+            download_png(isChromium)
+        }
+        else if (command === 'Update time and energy values.'){
+            const xValues = context[0]
+            const yValues = context[1]
+            const labelTip = keywordToLabelDict[context[2]]
+            const xUnit = keywordToUnitsDict[context[2]]
+
+            myChart2.data.labels = xValues
+            myChart2.data.datasets[0].data = yValues
+            myChart2.options.scales.xAxes[0].scaleLabel.labelString = labelTip
+            myChart2.options.tooltips.callbacks.afterLabel = function(tooltipItem) {
+                return tooltipItem.xLabel + xUnit
+            }
+            myChart2.update()
+        }
+        else if (command === "Clear all."){
+            try {
+                // Clear all data if exists
+                for (let dataset in myChart2.data.datasets){
+                    dataset.data = []
+                    myChart2.update()
+                }
+            }
+            catch (error){
+                // pass if they don't exist
+            }
+
+        }
+    }
+
+
+</script>
+
+
+
+
+

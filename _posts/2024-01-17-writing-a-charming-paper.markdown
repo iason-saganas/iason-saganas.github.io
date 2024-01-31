@@ -52,6 +52,10 @@ Data distribution:
 
 {% include Supernovae-Data-Comparison-ChartJS.html%}
 
+See [the DES paper](https://arxiv.org/pdf/2401.02929.pdf){:target="_blank"} 
+
+and [the Union3 paper](https://arxiv.org/pdf/2401.02929.pdf){:target="_blank"}.
+
 Now, after 8 years since the initial announcement in 2016, the Union3 SN compilation came out last November (of 2023) containing 2000 
 Supernovae samples instead of 500. Furthermore, this January (2024), after five years of dedicated search of Supernovae, 
 the Dark Energy Survey paper came out, releasing ~1600 datapoints that quintuple the amount of high-redshift supernovae (\\(z>0.5\\)) we had priorly.
@@ -113,8 +117,99 @@ Red \\( + \\) Yellow Bar \\( \approx \\) Blue Bar,
 
 Green \\( + \\) Tourquoise Bar \\( \approx \\) Red Bar.
 
-{% include Computational-Benchmark-ChartJS.html %}
+{% include Computational-Benchmark-Absolute-ChartJS.html %}
 
 It will probably be more informative to check the relative time taken:
 
+{% include Computational-Benchmark-Relative-ChartJS.html %}
 
+INFO: Time it took for diagonalizing some manipulated noise uncertainty matrix object: 
+about 10 minutes, so 30% of time (Union2.1 data).
+
+Code for finding the descent direction: 
+
+```python
+>>> optimize_kl()
+
+e, _ = minimizer(e)
+mean = MultiField.union([mean, e.position]) if mf_dom else e.position
+sl = e.samples.at(mean)
+energy_history.append((iglobal, e.value))
+```
+
+Code for transforms and metric that calls the apply method of the signal response: 
+
+```python
+>>> SampledKLEnergy() > draw_samples()
+
+
+# Construct transformation
+geometric = minimizer is not None
+if geometric:
+    tr = H.likelihood_energy.get_transformation()
+    if tr is None:
+        raise ValueError("Geometric sampling only works for likelihoods")
+    dtype, f_lh = tr
+    if isinstance(dtype, dict):
+        myassert(all([dtype[k] is not None for k in dtype.keys()]))
+    else:
+        myassert(dtype is not None)
+    scale = ScalingOperator(f_lh.target, 1., dtype)
+
+
+
+    fl = f_lh(Linearization.make_var(sam_position))
+
+    transformation = ScalingOperator(f_lh.domain, 1.) + fl.jac.adjoint @ f_lh
+
+    transformation_mean = sam_position + fl.jac.adjoint(fl.val)
+
+    # Note: This metric is equivalent to H.metric, except for the case of a
+    # `VariableCovarianceGaussianEnergy` with `use_full_fisher = True`.
+    met = SamplingEnabler(SandwichOperator.make(fl.jac, scale),
+                              ScalingOperator(fl.domain, 1., float),
+                              H.iteration_controller)
+
+
+else:
+    met = H(Linearization.make_var(sam_position, want_metric=True)).metric
+    if napprox >= 1:
+    met._approximation = makeOp(approximation2endo(met, napprox))
+    # /Construct transformation
+```
+
+Code for actually sampling KL: 
+
+```python
+>>> SampledKLEnergy() > draw_samples()
+
+
+# Draw samples
+sseq = random.spawn_sseq(n_samples)
+if mirror_samples:
+    sseq = reduce(lambda a, b: a+b, [[ss]*2 for ss in sseq])
+local_samples = []
+local_neg = []
+utilities.check_MPI_synced_random_state(comm)
+utilities.check_MPI_equality(sseq, comm)
+y = None
+
+ntask, rank, _ = get_MPI_params_from_comm(comm)
+for i in range(*shareRange(len(sseq), ntask, rank)):
+    with random.Context(sseq[i]):
+        neg = mirror_samples and (i % 2 != 0)
+        if not neg or y is None:  # we really need to draw a sample
+            y, yi = met.special_draw_sample(True)
+
+        if geometric:
+            m = transformation_mean - y if neg else transformation_mean + y
+            pos = sam_position - yi if neg else sam_position + yi
+            en = GaussianEnergy(m) @ transformation
+            en = EnergyAdapter(pos, en, nanisinf=True, want_metric=True)
+            en, _ = minimizer(en)
+            local_samples.append(en.position - sam_position)
+            local_neg.append(False)
+        else:
+            local_samples.append(yi)
+            local_neg.append(neg)
+```
