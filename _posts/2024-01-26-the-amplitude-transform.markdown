@@ -164,7 +164,7 @@ S = AA^{\dagger} \tag{7}.
 With that, we can do the inference in the standardized \\( \xi \hookleftarrow \mathcal{G}(\xi, \mathbf{1})\\)
 space and backtransform to \\( s \hookleftarrow \mathcal{G}(s,S) \\) when needed.
 
-# Variatonally Inferring Correlation Structure
+# Variationally Inferring Correlation Structure
 
 Say you don't know the Correlation Structure \\( S \\) _exactly_. Can the data inform you about 
 \\(S\\) as well as the signal? Yes! It very much can, this is a crucial use case of Gaussian
