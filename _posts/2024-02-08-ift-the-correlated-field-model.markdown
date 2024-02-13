@@ -247,26 +247,31 @@ gives us the integrated Wiener Process.
 <div style="border-left: 5px solid black; padding-left: 25px; margin:25px 0 25px 25px">
 
 <b>Note </b>:
-Please note that I am uncertain about the accuracy of the following paragraphs. 
-<span style="color:green"> Self-Note: Maybe Mrinal can help here?
-</span>
+Thanks @Mrinal Jetti for helping with the next few sections.
 </div>
 
 
 Now, define a new operator \\( \tilde{U} \\), as the integral of the power spectrum \\( p_T \\) over all Fourier-Modes,
-except the zero mode. We might call \\( \tilde{U} \\) the Total Variance Operator.
+except the zero mode.
 
 $$
 \tilde{U} = \int_{k\neq 0} p_T(k) \hspace{1mm} \mathrm{d}k
 $$
 
-_In my understanding_, the significance of this operator is as follows: The smoother the power spectrum, the steeper
-it drops in the log-log space, so the sooner it arrives at its last \\(k\\)-mode. Or, in other words, the smaller the 
+We might call \\( \tilde{U} \\) the Signal Variance Operator, since \\( \tilde{U} \\) is the expectation of the 
+signal variance. 
+I transferred the 
+[relevant calculation]({% post_url 2024-02-12-calculation-expected-variance %}){:target="_blank"}
+over to this blog post to keep this one a bit less cluttered.  
+
+_In my understanding_, the significance of this operator is as follows: The smoother the signal field realizations, the steeper
+the power spectrum drops in the log-log space, so the sooner it arrives at its last \\(k\\)-mode. Or, in other words, the smaller the 
 area under the power spectrum. That means, a bigger \\( \tilde{U} \\), the area under the power spectrum curve, corresponds
-to a "rougher" or less steep power spectrum, in each case more total variation around the signal mean is expected.
+to a "rougher" or less steep power spectrum, in each case more total variation around the signal mean is expected. This
+comparison of course only applies for power spectra with the same fixed y-axis-interception.
 
 \\( \tilde{U} \\) is therefore a measure of total expected variation and an important quantity, and up to now fixed 
-by the integrated Wiener Process. 
+by the integrated Wiener Process! 
 The IWP controls the slope of the power-law like behavior, as well as the strength 
 of the integrated part of the process. 
 The total variation \\( \tilde{U} \\) is 
@@ -276,32 +281,49 @@ $$
 \tilde{U} = \int_{k \neq 0}e^{2\gamma(k)} \hspace{1mm} \mathrm{d}k
 $$
 
-Now, _as I see it_, the authors of the [2020 Arras Nature paper](https://arxiv.org/abs/2002.05218){:target="_blank"} separate the roles and functionalities
-of the different hyperparameters as follows: 
+
+Now, _as I see it_, the authors of the [2020 Arras Nature paper](https://arxiv.org/abs/2002.05218){:target="_blank"} try to separate the roles and functionalities
+of different hyperparameters. The hyperparameters are all in some way correlated. For example:
 The IWP takes on the responsibility of fixing:
 - the power spectrum slope 
 - the non-linear deviation from it, 
-- **as well as** the total expected variation through its volume. 
+- the interception of the power spectrum with the \\(y\\)-axis,
+- **as well as** the total expected variation through its volume,
 
-Now, divide out the volume contribution of the IWP and introduce new parameters that act as **direct dials** to control
-the total expected variation. Then, the **IWP only handles how the power spectrum changes from one point to the next**.
+and all of these points cross-influence each other. 
+So it is tried to remove this sort of "degeneracy" by "untangling" the parameters from each
+other. 
+This can be done for example by dividing out the volume contribution of the IWP and introduce new parameters that act 
+as **direct dials** to control
+the total expected variation. 
+Then, the **IWP only handles how the power spectrum changes from one point to the next**.
 
-To do this, divide out the volume \\( \sqrt{\tilde{U}} \\) (which in the paper is explicitly called the Variance Amplitude
-Operator). This suggests that 
-
-$$
-\sqrt{\tilde{U}}=\sqrt{\int_{k \neq 0}e^{2\gamma(k)} \hspace{1mm} \mathrm{d}k} = \int_{k \neq 0}e^{\gamma(k)} \hspace{1mm} \mathrm{d}k
-$$
-
-<span style="color:green">(1. right? 2. Why not write it a priori as int e^gamma, why take the square root of U?). </span>
-
-Introducing a new hyperparameter \\(a \\) we can finally fix the model for the power spectrum of \\( A \\) as
+To do this, divide out the volume \\( \sqrt{\tilde{U}} \\) and introduce a new hyperparameter \\(a \\)!
 
 <div style="background-color: yellow ">
 \[
-p_A(k)=a\tilde{U}^{-1/2}e^{\gamma}(k). \hspace{5mm} \forall k\neq 0 \tag{9}
+p_A(k)=a\tilde{U}^{-1/2}e^{\gamma}(k). \hspace{5mm} \forall k\neq 0, \tag{9}
 \]
 </div>
+
+which finally finishes the model for the power spectrum of \\( A \\) for all non-zero Fourier-Modes.
+
+Why divide out \\( \sqrt{\tilde{U}}\\)? 
+Because then, the total expected variation of the signal realizations around the mean
+is given by 
+
+$$
+\begin{aligned}
+\int_{k\neq 0}\mathrm{d}k \hspace{1mm} P_T(k) &= \int_{k\neq 0}\mathrm{d}k \hspace{1mm} P_A^2(k) = \int_{k\neq 0}\mathrm{d}k \hspace{1mm} a^2\tilde{U}^{-1}e^{2 \gamma}(k) \\
+&=  a^2\tilde{U}^{-1} \int_{k\neq 0}\mathrm{d}k \hspace{1mm} e^{2 \gamma}(k) = a^2\tilde{U}^{-1} \tilde{U}^{1} \\
+&= a^2.
+\end{aligned}
+$$
+
+So controlled only by \\( a \\)! Here, I also refer to the gut-feeling of Mrinal, who feels that through this calculation the 
+signal variance is not completely untangled from all other parameters and not just strictly only controlled by \\( a \\).
+
+
 
 
 
@@ -339,6 +361,11 @@ sub-domains. It is the last to-be-inferred parameter and follows statistics
 $$
 \alpha = e^{\mu_{\alpha}+\sigma_{\alpha}\xi_{\alpha}}.
 $$
+
+Two characteristic of a power-spectrum in the log-log space would be its slope and its intercept with the y-axis.
+Here, we are not sure how all of these parameters contribute in what way to the y-intercept for example. 
+We will set up an inference toy-model in `NIFTy8` and find correlations between the hyperparameters and characteristics 
+of the power-spectrum in log-log space numerically.
 
 ## Identifying The Model Parameters With `NIFTy8` Keywords
 
