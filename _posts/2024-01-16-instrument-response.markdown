@@ -152,5 +152,5 @@ additional steps:
 Parameterizing Equation \\( (6) \\) in terms of the signal yields our Response Operator. 
 
 $$
-    R(s) = 5 \mathrm{log}_{10} (e^x d_H \int_0^x e^{-\frac{1}{2}s(x)+x} \mathrm{d}x) - 5\tag{7}
+    R(s) = 5 \mathrm{log}_{10} (e^x d_H \int_0^x e^{-\frac{1}{2}s(\tilde{x})+\tilde{x}} \mathrm{d}\tilde{x}) - 5\tag{7}
 $$

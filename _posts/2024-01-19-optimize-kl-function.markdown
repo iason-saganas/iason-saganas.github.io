@@ -698,3 +698,122 @@ or a bit more verbose:
                         
 - b, energy.position = metric.special_draw_sample(True) # most of all
 ```
+
+### The final minimization `e, _ = minimizer(e)`
+
+This might be the most important line of code in the `NIFTy` inference scheme, since it provides the final approximation
+for the current iteration. `minimizer` is for example an instance of this class: 
+
+```python 
+class NewtonCG(DescentMinimizer):
+    """Calculates the descent direction according to a Newton-CG scheme.
+
+    Algorithm derived from SciPy sources.
+    """
+
+    def __init__(self, controller, napprox=0, line_searcher=None, name=None,
+                 nreset=20, max_cg_iterations=200, energy_reduction_factor=0.1,
+                 enable_logging=False):
+        if line_searcher is None:
+            line_searcher = LineSearch(preferred_initial_step_size=1.)
+        super(NewtonCG, self).__init__(controller=controller,
+                                       line_searcher=line_searcher)
+        self._napprox = napprox
+        self._name = name
+        self._nreset = nreset
+        self._max_cg_iterations = max_cg_iterations
+        self._alpha = energy_reduction_factor
+        from .iteration_controllers import EnergyHistory
+        self._history = EnergyHistory() if enable_logging else None
+
+    def get_descent_direction(self, energy, old_value=None):
+        if old_value is None:
+            ic = GradientNormController(iteration_limit=5)
+        else:
+            ediff = self._alpha*(old_value-energy.value)
+            ic = AbsDeltaEnergyController(
+                ediff, iteration_limit=self._max_cg_iterations, name=self._name)
+        if self._history is not None:
+            ic.enable_logging()
+        e = QuadraticEnergy(0*energy.position, energy.metric, energy.gradient)
+        p = None
+        if self._napprox > 1:
+            met = energy.metric
+            p = makeOp(approximation2endo(met, self._napprox)).inverse
+        e, conv = ConjugateGradient(ic, nreset=self._nreset)(e, p)
+        if self._history is not None:
+            self._history += ic.history
+        if conv == ic.ERROR:
+            raise ValueError("Cannot find descent direction")
+        return -e.position
+
+    @property
+    def inversion_history(self):
+        return self._history
+```
+
+First question: I am applying the minimizer to this `e` object, but in the class definition there seems no apply method? 
+
+Answer: Look at the class `NewtonCG` is derived from. There you will find: 
+
+```python 
+    def __call__(self, energy):
+        """Performs the minimization of the provided Energy functional.
+
+        Parameters
+        ----------
+        energy : Energy
+           Energy object which provides value, gradient and metric at a
+           specific position in parameter space.
+
+        Returns
+        -------
+        Energy
+            Latest `energy` of the minimization.
+        int
+            Can be controller.CONVERGED or controller.ERROR
+
+        Notes
+        -----
+        The minimization is stopped if
+            * the controller returns controller.CONVERGED or controller.ERROR,
+            * a perfectly flat point is reached,
+            * according to the line-search the minimum is found,
+        """
+        f_k_minus_1 = None
+        controller = self._controller
+        status = controller.start(energy)
+        if status != controller.CONTINUE:
+            return energy, status
+
+        while True:
+            # check if position is at a flat point
+            if energy.gradient_norm == 0:
+                return energy, controller.CONVERGED
+
+            # compute a step length that reduces energy.value sufficiently
+            new_energy, success = self.line_searcher.perform_line_search(
+                energy=energy,
+                pk=self.get_descent_direction(energy, f_k_minus_1),
+                f_k_minus_1=f_k_minus_1)
+            if not success:
+                self.reset()
+
+            f_k_minus_1 = energy.value
+
+            if new_energy.value > energy.value:
+                logger.error("Error: Energy has increased")
+                return energy, controller.ERROR
+
+            if new_energy.value == energy.value:
+                logger.warning(
+                    "Warning: Energy has not changed. Assuming convergence...")
+                return new_energy, controller.CONVERGED
+
+            energy = new_energy
+            status = self._controller.check(energy)
+            if status != controller.CONTINUE:
+                return energy, status
+```
+
+The `NewtonCG` especially provides the in the `__call__` method needed function `get_descent_direction`.

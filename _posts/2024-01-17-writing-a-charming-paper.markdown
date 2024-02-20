@@ -213,3 +213,5 @@ for i in range(*shareRange(len(sseq), ntask, rank)):
             local_samples.append(yi)
             local_neg.append(neg)
 ```
+
+## 14.02: Misc
