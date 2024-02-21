@@ -54,7 +54,7 @@ $$
 and the KL-divergence is
 
 $$
-\mathcal{D}_{\mathrm{KL}}\bigg( \tilde{\mathcal{P}}(s\mid \varphi) \mid \mid \mathcal{P}(s\mid d)\bigg) 
+\mathcal{D}_{\mathrm{KL}}\bigg( \tilde{\mathcal{P}}(s\mid \varphi) \mid \mid \mathcal{P}(d\mid s)\bigg) 
 = \int  Ds \hspace{1mm} \tilde{\mathcal{P}}(s\mid \varphi) \mathrm{log}\bigg(\frac{\mathcal{P}(d\mid s)}{\tilde{\mathcal{P}}(s\mid \varphi)}\bigg)
 $$
 
