@@ -27,55 +27,8 @@ This post may be a good basis for understanding the
 
 # Variational Inference
 
-Only for a small subset of problems, an analytical posterior solution can be found. 
-In many cases, the evidence \\(\mathcal{P}(d)\\) is the source of the unsolvability 
-of a problem.
-
-In VI, the idea is to find a family of approximations \\(\tilde{\mathcal{P}}(s\mid \varphi)\\) 
-that are dependent on some parameters \\(\varphi \\) and let that family converge to the 
-optimal approximation via minimizing the KL-divergence w.r.t to the 
-approximation parameters \\(\varphi \\).
-
-$$
-\tilde{\mathcal{P}}(s \mid \varphi )_{\text{optimal}} = 
-\mathrm{optimize} \hspace{1mm}
-\mathcal{D}_{\mathrm{KL}}\bigg( \tilde{\mathcal{P}}(s\mid \varphi) \mid \mid \mathcal{P}(s\mid d)\bigg)
-$$
-
-Say you have made some initial guess for the first approximating distribution.
-To find the KL-divergence, the true posterior is needed. But when minimizing the KL-divergence,
-constants (e.g., the problematic renormalization constant \\(\mathcal{P}(d)\\) ) are
-irrelevant. So the _relevant_ parts of posterior are 
-
-$$
-\mathcal{H}(s\mid d) \hspace{1mm} \hat{=} \hspace{1mm} \mathcal{H}(d,s)=\mathcal{H}(d \mid s) + \mathcal{H}(s) \tag{2}
-$$
-
-and the KL-divergence is
-
-$$
-\mathcal{D}_{\mathrm{KL}}\bigg( \tilde{\mathcal{P}}(s\mid \varphi) \mid \mid \mathcal{P}(d\mid s)\bigg) 
-= \int  Ds \hspace{1mm} \tilde{\mathcal{P}}(s\mid \varphi) \mathrm{log}\bigg(\frac{\mathcal{P}(d\mid s)}{\tilde{\mathcal{P}}(s\mid \varphi)}\bigg)
-$$
-
-The KL-divergence does not even have to be calculated explicitly, drawing samples from it is sufficient
-for the optimization
-([see here](https://projecteuclid.org/journals/bayesian-analysis/volume-8/issue-4/Fixed-Form-Variational-Posterior-Approximation-through-Stochastic-Linear-Regression/10.1214/13-BA858.full){:target="_blank"}).
-
-To perform the minimization, a target functional needs to be optimized numerically. This might be a
-non-convex problem, and we are not guaranteed to find a global minimum. For a Newton or quasi-Newton 
-algorithm, the current position and derivatives of that position in the parameters space need to be
-known. Therefore, the convergence properties of the minimization as well as the numerical conditioning number
-rely on the underlying coordinate space.  
-
-It will almost always be numerically more powerful to do the inference in a coordinate system, where 
-the posterior given by Bayes-Theorem (minus the renormalization constant) and the approximating distribution
-are e.g., Gaussians. 
-
-To perform coordinate transforms, the differential volume change has to be taken into account in form
-of the Jacobi determinant. 
-
-**Coordinate systems matter for variational inference**.
+At this point, a brief digression into Variational Inference (VI) is useful. 
+See [this post]({% post_url 2024-02-21-variational-inference %}){:target="_blank"}.
 
 # Reparameterizing the Gaussian
 
