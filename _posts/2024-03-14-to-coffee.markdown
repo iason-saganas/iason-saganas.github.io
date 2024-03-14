@@ -1,0 +1,30 @@
+---
+layout: post-custom
+title:  "Covfefe"
+date:   2024-03-13 06:00:00 +0100
+categories: [learning-dynamics]
+---
+{% include katexLink.html%}
+ 
+For a lot of people, myself included, coffee is a cornerstone of our academic existence. 
+Not only as a concentration booster, but as a means of providing a theater for laid-back, open communication with other
+scientists and colleagues. Another example of coffee's goodness is its neurophysiological potential to function as a 
+daily trigger of productivity: "With this first sip of coffee, my work begins." 
+
+Coffee connects people - it is widely seen across many cultures in the same image of a socializing,
+focus-boosting, productivity-centered drink. 
+
+It's use and mis-use over centuries is a reflection of the human desire to be awake, conscious and productive.
+
+I have memories of loved ones that are now gone, my grandparents, in which I watch them drink their moca or in which I
+drink with them. Memories of friends I met up with for a quick coffee. Memories of my parents discussing and laughing at 
+8:00 in the morning over a coffee. Now, every time I drink coffee, for whatever purpose, it will be automatically added
+to my memory with a label "Espresso Escapades" - or - "Memories that capture the essence, goodness and universality 
+of experiences, adventures and work bounded by the theme 'coffee'."; Haven't decided on a label yet. 
+
+I hope we can drink a cup of coffee together some day! On some level, we all drink the same first sip of coffee together,
+every day.
+
+# Neurophysiological effects of coffee
+
+Cofve good for you in right amoun
