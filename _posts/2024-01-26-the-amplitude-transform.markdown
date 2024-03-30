@@ -40,7 +40,7 @@ $$
 $$
 
 Instead of inferring \\(s \hookleftarrow \mathcal{G}(s,S)\\) with some potentially complex correlation
-structure \\(S \\), it'd be much nice to inferr \\(\xi \hookleftarrow \mathcal{G}(\xi, \mathbf{1} )\\).
+structure \\(S \\), it'd be much nicer to infer \\(\xi \hookleftarrow \mathcal{G}(\xi, \mathbf{1} )\\).
 
 This can be done as follows. First, do an eigen-decomposition of \\(S\\), denote the diagonal matrix with
 \\(\hat{S}\\).
