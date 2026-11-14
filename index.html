@@ -1,60 +1,65 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
-layout: home-custom
-title: About me 
+layout: minimal
 ---
-<blockquote>Pursuing knowledge about the stars since 2006.</blockquote>
 
-{% include katexLink.html%}
-{% include home/plotly3D-welcome-plot.html%}
+<div class="header">
+  <img src="{{ '/media/general/portrait.jpg' | relative_url }}" alt="Photo of Iason Saganas">
+  <div class="info">
+    <h1>Iason Saganas <span class="greek" lang="el">Ιάσων Σαγάνας</span></h1>
+    <p>Astrophysics PhD student in Munich, at <a target="_blank" rel="noopener" href="https://www.lmu.de">LMU</a> and the
+      <a target="_blank" rel="noopener" href="https://www.mpa-garching.mpg.de">Max Planck Institute for Astrophysics</a>.</p>
+    <p>In my PhD I work on the interstellar medium: I reconstruct three-dimensional maps of
+      dust extinction properties and of magnetic fields traced by starlight polarization,
+      using Bayesian methods (Information Field Theory).
+      I am particularly interested in dust as a cosmological foreground, for example in the
+      search for inflationary B-modes in the CMB, or for dust corrections in supernova cosmology.
+      I am also broadly interested in gravitational-wave science.</p>
+    <p class="contact">E-mail: <a href="mailto:isaganas@mpa-garching.mpg.de">isaganas@mpa-garching.mpg.de</a><br>
+      <a target="_blank" rel="noopener" href="https://arxiv.org/search/?searchtype=author&amp;query=Saganas%2C+I">arXiv</a> |
+      <a target="_blank" rel="noopener" href="https://github.com/iason-saganas">GitHub</a></p>
+  </div>
+</div>
 
-<p style="font-size: 12px; color:gray">
-    <span style="text-decoration: underline">
-        What's this plot?
-    </span>
-    This plot is an intermediate result of one my analyses about tidal dynamics in a hierarchical 4-body-system.
-    That means a system consisting out of a sun, a planet and its moon, and another moon around that moon - which we
-    call submoon. There is interesting gravitational and tidal dynamics happening in this system. The tides (second order
-    gravitational moment more or less) act to remove
-    the satellites, i.e. the moon and the submoon in this case.
-    This plot demonstrates a transition region in the semi-major-axis phase space of this system; 
-    The axes are proportional to the actual initial values of the semi-major-axis of planet, moon and submoon. 
-    These values are then put into the differential equations describing the system, which are solved in python 
-    as an initial value problem; if the integration runs successfully for 4.5 billion years, we call the inital value 
-    point stable, give it a color and plot it into this diagram. In this case I plotted those initial values which lead 
-    to a stability of around 75%-90% of 4.5 billion years.
-</p>
+<hr>
 
-<p style="font-size: 12px; color:gray">
-    These points represents a transition region in the phase space; All points lying in front of the
-    plotted surface i.e. towards you (if you haven't moved the plot yet) will lead to a stable submoon-system;
-    All points lying behind this surface i.e. away from you lead to the submoon or moon escaping their hosts or 
-    the bodies crashing into each other.
-</p>
+<h2>Education</h2>
+<ul>
+  <li><b>PhD, Astrophysics</b> (2026–2029). LMU Munich and MPA Garching. Supervisors: Prof. Dr. Til Birnstiel, PD Dr. Torsten Enßlin.<br>
+    <i>Dust extinction properties and sky-projected magnetic fields in three spatial dimensions.</i></li>
+  <li><b>M.Sc. Astrophysics</b> (2023–2026). LMU Munich.<br>
+    Thesis at MPA with PD Dr. Torsten Enßlin: <i>Wigner Functions, Gaussian Processes and Stochastic Differential Equations: Template-Free Gravitational Wave Analysis.</i></li>
+  <li><b>B.Sc. Physics</b> (2019–2023). LMU Munich.<br>
+    Thesis at MPA with PD Dr. Torsten Enßlin: <i>Agnostic Reconstruction of the Cosmic Expansion History via Information Field Theory.</i></li>
+  <li><b>Abitur</b> (2012–2019). Gymnasium Donauwörth.</li>
+</ul>
 
-<p style="font-size: 12px; color:gray">
-    Try moving around the plot and getting a feel for the shape of this transition surface.
-</p>
+<h2>Research</h2>
+<ul>
+  <li><b>Saganas et al.</b>, <i>Nonparametric Variational Inference Reconstruction of the Cosmic Expansion History from SNe Ia — the charm2 code.</i>
+    Recommended for publication in A&amp;A. [<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2604.24630">pdf</a>]</li>
+</ul>
 
-Hello you! Thank you for visiting my landing page. On this website you will find 
-blog posts, software, videos and any other media I find worthy of sharing that documents
-my journey through physics academia. 
+<h2>Scholarships</h2>
+<ul>
+  <li>Studienstiftung des Deutschen Volkes (2025–2026)</li>
+  <li>Deutschlandstipendium, LMU Munich (2025, declined)</li>
+</ul>
 
-Since as long as I can remember I am fascinated by nature. I was officially hooked 
-after having read the book "Das Große Antwortbuch der Astronomie" ("The Great Q&A on Astronomy")
-which was in approximately 2006. 
+<h2>Work</h2>
+<ul>
+  <li>Web developer and author of educational materials, <a target="_blank" rel="noopener" href="https://www.solarbildung.org">Solar für Kinder Bildung gGmbH</a> (2021–2025)</li>
+  <li>Tutor, quantum mechanics undergraduate lab P3B, LMU (Sept. 2023)</li>
+  <li>Tour guide, Deutsches Museum, for MPE (Feb.–Apr. 2023)</li>
+  <li>Private tutor (2019–2023)</li>
+</ul>
 
+<h2>Voluntary service</h2>
+<ul>
+  <li>Master's student representative, astrophysics, LMU (2024–2025)</li>
+  <li>Member, Munich <a target="_blank" rel="noopener" href="https://www.arbeiterkind.de">ArbeiterKind.de</a> group (2024–2026)</li>
+  <li>Franco-German friendship committee Mertingen–St. Pazanne (2017–2020)</li>
+</ul>
 
-![Das große Antwortbuch der Astronomie](../../../../media/general/Große-Antwortbuch.jpg){:style="display:block; margin-left:auto; margin-right:auto"}
-
-My goal is to contribute to the scientific knowledge of humanity in the fields of astrophysics,
-data-science and cosmology, which is an incredibly exciting adventure to embark on in 
-this day and age of the 21st century.
-
-I want to excite kids and young adults to be curious about nature and the process of science 
-which we use to probe nature with. In the best case I can nudge them on 
-a path to consider becoming students of the natural sciences, especially physics and mathematics. 
-
-Furthermore, when I grow up, I want to educate the next generation of excellent physicists. 
+<h2>Skills</h2>
+<p>Python (scientific programming), JavaScript, HTML, CSS.<br>
+  Greek and German (native), English (proficient), French (good).</p>

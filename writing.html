@@ -1,0 +1,17 @@
+---
+layout: minimal
+title: Writing
+permalink: /writing/
+---
+
+<p><a href="{{ '/' | relative_url }}">← Iason Saganas</a></p>
+
+<h1>Writing</h1>
+<p>Blog posts on Information Field Theory, NIFTy, planetary science and learning to do research.</p>
+
+<ul class="posts">
+  {%- for post in site.posts %}
+  <li><a target="_blank" rel="noopener" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    <span class="date">({{ post.date | date: "%-d %b %Y" }})</span></li>
+  {%- endfor %}
+</ul>
